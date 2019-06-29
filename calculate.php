@@ -46,23 +46,6 @@ foreach($potions as $potionType => $potionCountArray)
     $twoPotion = $potionCountArray[2];
     $threePotion = $potionCountArray[3];
 
-    // saved for reference
-    //
-    // if($onePotion["buy_average"] !== 0)
-    // {
-    //     echo "(1) " . $potionType . " {$onePotion["buy_average"]}" . "\n";
-    // }
-    //
-    // if($twoPotion["buy_average"] !== 0)
-    // {
-    //     echo "(2) " . $potionType . " {$twoPotion["buy_average"]}" . "\n";
-    // }
-    //
-    // if($threePotion["buy_average"] !== 0)
-    // {
-    //     echo "(3) " . $potionType . " {$threePotion["buy_average"]}" . "\n";
-    // }
-
     if($onePotion["overall_average"] !== 0 && $onePotion["overall_average"] * 4 < $fourPotion["overall_average"])
     {
         output(1, $potionType, $onePotion, $fourPotion);
