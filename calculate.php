@@ -5,6 +5,9 @@ $json = json_decode($file, true);
 // A container array for all potions
 $potions = [];
 
+// A container array for saving profitable flips
+$data = [];
+
 foreach($json as $key => $row)
 {
     $id = $row["id"];
@@ -48,24 +51,61 @@ foreach($potions as $potionType => $potionCountArray)
 
     if($onePotion["overall_average"] !== 0 && $onePotion["overall_average"] * 4 < $fourPotion["overall_average"])
     {
-        output(1, $potionType, $onePotion, $fourPotion);
+        $data[] = process(1, $potionType, $onePotion, $fourPotion);
     }
 
     if($twoPotion["overall_average"] !== 0 && $twoPotion["overall_average"] * 2 < $fourPotion["overall_average"])
     {
-        output(2, $potionType, $twoPotion, $fourPotion);
+        $data[] = process(2, $potionType, $twoPotion, $fourPotion);
     }
 
     if($threePotion["overall_average"] !== 0 && $threePotion["overall_average"] * (4/3) < $fourPotion["overall_average"])
     {
-        output(3, $potionType, $threePotion, $fourPotion);
+        $data[] = process(3, $potionType, $threePotion, $fourPotion);
     }
 }
 
-function output($count, $potionType, $selectedPotion, $fullPotion)
+usort($data, function($a, $b)
+{
+    return $b["margin"] <=> $a["margin"];
+});
+
+output($data);
+
+function process($count, $potionType, $selectedPotion, $fullPotion)
 {
     // Calculate profit
     $profit = $fullPotion["overall_average"] - (($selectedPotion["overall_average"] / $count) * 4);
 
-    echo "BUY:\t({$count})\t{$potionType}\t@{$selectedPotion["overall_average"]}\t{$profit}\n";
+    return [
+        "potion" => $potionType . "({$count})",
+        "potionType" => $potionType,
+        "buyPrice" => $selectedPotion["overall_average"],
+        "evenBuyPrice" => ($fullPotion["overall_average"] / 4),
+        "profit" => $profit,
+        "profitSellPrice" => $fullPotion["overall_average"],
+        "evenSellPrice" => (($selectedPotion["overall_average"] / $count) * 4),
+        "margin" => ($profit / (($selectedPotion["overall_average"] / $count) * 4))
+    ];
+}
+
+function output($data)
+{
+    echo "\n";
+    printf("%-20s | %-10s | %-15s | %-10s | %-20s | %-15s | %-10s\n", "Potion", "BuyPrice", "EvenBuyPrice", "Profit", "ProfitSellPrice", "EvenSellPrice", "margin");
+    echo "\n";
+
+    foreach($data as $key => $row)
+    {
+        printf(
+            "%-20s | %-10d | %-15d | %-10d | %-20d | %-15d | %-10.3f\n",
+            $row["potion"],
+            $row["buyPrice"],
+            $row["evenBuyPrice"],
+            $row["profit"],
+            $row["profitSellPrice"],
+            $row["evenSellPrice"],
+            $row["margin"]
+        );
+    }
 }
