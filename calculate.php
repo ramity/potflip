@@ -67,7 +67,7 @@ foreach($potions as $potionType => $potionCountArray)
 
 usort($data, function($a, $b)
 {
-    return $b["margin"] <=> $a["margin"];
+    return $b["fullBuyQuantity"] <=> $a["fullBuyQuantity"];
 });
 
 output($data);
@@ -75,7 +75,7 @@ output($data);
 function process($count, $potionType, $selectedPotion, $fullPotion)
 {
     // Calculate misc fields
-    $profit = $fullPotion["overall_average"] - (($selectedPotion["overall_average"] / $count) * 4);
+    $maxProfit = $fullPotion["overall_average"] - (($selectedPotion["overall_average"] / $count) * 4);
     $evenSellPrice = (($selectedPotion["overall_average"] / $count) * 4);
 
     // Prevent division by zero
@@ -87,42 +87,43 @@ function process($count, $potionType, $selectedPotion, $fullPotion)
     }
     else
     {
-        $margin = ($profit / $evenSellPrice);
+        $margin = ($maxProfit / $evenSellPrice);
     }
 
     $potion = $potionType . "({$count})";
-    $buyPrice = $selectedPotion["overall_average"];
-    $evenBuyPrice = ($fullPotion["overall_average"] / 4) * $count;
-    $profitSellPrice = $fullPotion["overall_average"];
+    $buyPrice = round($selectedPotion["overall_average"], 2);
+    $evenBuyPrice = round(($fullPotion["overall_average"] / 4) * $count, 2);
+    $profitSellPrice = round($fullPotion["overall_average"], 2);
+    $evenSellPrice = round($evenSellPrice, 2);
+
+    $buyRange = "{$buyPrice} - {$evenBuyPrice}";
+    $sellRange = "{$evenSellPrice} - {$profitSellPrice}";
 
     return [
         "potion" => $potion,
         "potionType" => $potionType,
-        "buyPrice" => $buyPrice,
-        "evenBuyPrice" => $evenBuyPrice,
-        "profit" => $profit,
-        "profitSellPrice" => $profitSellPrice,
-        "evenSellPrice" => $evenSellPrice,
-        "margin" => $margin
+        "buyRange" => $buyRange,
+        "maxProfit" => $maxProfit,
+        "sellRange" => $sellRange,
+        "margin" => $margin,
+        "fullBuyQuantity" => $fullPotion["buy_quantity"]
     ];
 }
 
 function output($data)
 {
     echo "\n";
-    printf("%-25s | %-10s | %-15s | %-10s | %-20s | %-15s | %-10s\n", "Potion", "BuyPrice", "EvenBuyPrice", "Profit", "ProfitSellPrice", "EvenSellPrice", "margin");
+    printf("%-25s | %-15s | %-10s | %-20s | %-10s\n", "Potion", "BuyRange", "MaxProfit", "SellRange", "margin");
     echo "\n";
 
     foreach($data as $key => $row)
     {
         printf(
-            "%-25s | %-10d | %-15d | %-10d | %-20d | %-15d | %-10.3f\n",
+            "%-25s | %-15s | %-10d | %-20s | %-10.3f\n",
             $row["potion"],
-            $row["buyPrice"],
-            $row["evenBuyPrice"],
-            $row["profit"],
-            $row["profitSellPrice"],
-            $row["evenSellPrice"],
+            $row["buyRange"],
+            $row["maxProfit"],
+            $row["sellRange"],
             $row["margin"]
         );
     }
