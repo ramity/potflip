@@ -49,17 +49,17 @@ foreach($potions as $potionType => $potionCountArray)
     $twoPotion = $potionCountArray[2];
     $threePotion = $potionCountArray[3];
 
-    if($onePotion["overall_average"] * 4 < $fourPotion["overall_average"])
+    if($onePotion["overall_average"] != 0 && $onePotion["overall_average"] * 4 < $fourPotion["overall_average"])
     {
         $data[] = process(1, $potionType, $onePotion, $fourPotion);
     }
 
-    if($twoPotion["overall_average"] * 2 < $fourPotion["overall_average"])
+    if($twoPotion["overall_average"] != 0 && $twoPotion["overall_average"] * 2 < $fourPotion["overall_average"])
     {
         $data[] = process(2, $potionType, $twoPotion, $fourPotion);
     }
 
-    if($threePotion["overall_average"] * (4/3) < $fourPotion["overall_average"])
+    if($threePotion["overall_average"] != 0 && $threePotion["overall_average"] * (4/3) < $fourPotion["overall_average"])
     {
         $data[] = process(3, $potionType, $threePotion, $fourPotion);
     }
