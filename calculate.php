@@ -82,6 +82,7 @@ function process($count, $potionType, $selectedPotion, $fullPotion)
     $margin = 0;
     if($evenSellPrice == 0)
     {
+        $evenSellPrice = $fullPotion["overall_average"];
         $margin = INF;
     }
     else
