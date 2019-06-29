@@ -90,13 +90,18 @@ function process($count, $potionType, $selectedPotion, $fullPotion)
         $margin = ($profit / $evenSellPrice);
     }
 
+    $potion = $potionType . "({$count})";
+    $buyPrice = $selectedPotion["overall_average"];
+    $evenBuyPrice = ($fullPotion["overall_average"] / 4) * $count;
+    $profitSellPrice = $fullPotion["overall_average"];
+
     return [
-        "potion" => $potionType . "({$count})",
+        "potion" => $potion,
         "potionType" => $potionType,
-        "buyPrice" => $selectedPotion["overall_average"],
-        "evenBuyPrice" => ($fullPotion["overall_average"] / 4),
+        "buyPrice" => $buyPrice,
+        "evenBuyPrice" => $evenBuyPrice,
         "profit" => $profit,
-        "profitSellPrice" => $fullPotion["overall_average"],
+        "profitSellPrice" => $profitSellPrice,
         "evenSellPrice" => $evenSellPrice,
         "margin" => $margin
     ];
