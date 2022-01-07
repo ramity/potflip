@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./
+      dockerfile: docker/backend/Dockerfile
+    container_name: potflip_backend
+    image: potflip_backend
+    volumes:
+     - ./code:/code
+
+networks:
+  default:
+    name: potflip

@@ -43,11 +43,16 @@ foreach($json as $key => $row)
 
 foreach($potions as $potionType => $potionCountArray)
 {
-    $fourPotion = $potionCountArray[4];
+    // skip if 4 dose potion is not present to perform calculations against
+    if(!array_key_exists(4, $potionCountArray))
+    {
+      continue;
+    }
 
     $onePotion = $potionCountArray[1];
     $twoPotion = $potionCountArray[2];
     $threePotion = $potionCountArray[3];
+    $fourPotion = $potionCountArray[4];
 
     if($onePotion["overall_average"] != 0 && $onePotion["overall_average"] * 4 < $fourPotion["overall_average"])
     {
