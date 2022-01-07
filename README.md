@@ -2,6 +2,13 @@
 
 A simple potion flipping helper
 
+# Notice
+
+**RSbuddy no longer seems maintained.**
+
+> On Jan 6th 2022, I noted the response from rsbuddy.com/exchange/summary.json is malformed and incomplete.
+> Until this is resolved, this repo/project is no longer functional.
+
 # Usage
 
 ```
